@@ -67,8 +67,8 @@ async def test_screenshot_beside_a_parallel_call_keeps_tool_replies_adjacent():
 
 @pytest.mark.asyncio
 async def test_lone_screenshot_is_left_alone():
-    """The control case from the same run: a screenshot that was the round's
-    only tool call already formats legally and must not be reshuffled."""
+    """The control case: a screenshot that is the round's only tool call
+    already formats legally and must not be reshuffled."""
     msg = Msg(
         name="dms_bill_details_info",
         role="assistant",

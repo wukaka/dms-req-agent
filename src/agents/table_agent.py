@@ -152,8 +152,8 @@ def _resolve_in_scope(platform_dir: Path, table: str, relative_path: str) -> "Pa
 def make_write_file_tool(platform_dir: Path, table: str) -> FunctionTool:
     """Give a table agent a way to persist prose/archival content to disk.
 
-    `prompts/common_rules.md` was already written (and reviewed) assuming
-    agents have a generic "Write 工具" for exactly two purposes: `tables/`
+    `prompts/common_rules.md` assumes agents have a generic "Write 工具" for
+    exactly two purposes: `tables/`
     (its own `<表名>.md`, the prose `checks/consistency.py` scans) and
     `files/` (raw XHR/HTML/Excel archival, rule 11). Neither MCP client
     (jsreverser/annotator) can write arbitrary text - only images have a
@@ -253,8 +253,8 @@ def existing_artifacts(platform_dir: Path, table: str) -> list[Path]:
 def resume_digest(platform_dir: Path, table: str) -> str:
     """The 「已有产物」 section of a re-launched table agent's task message.
 
-    Empty string when there is nothing on disk, so a first run's prompt is
-    byte-identical to what it was before resume existed.
+    Empty string when there is nothing on disk, so a fresh table's opening
+    prompt carries no resume section at all.
     """
     artifacts = existing_artifacts(platform_dir, table)
     if not artifacts:

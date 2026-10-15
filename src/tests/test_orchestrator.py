@@ -290,11 +290,10 @@ def test_browser_queue_tool_names_qualifies_with_mcp_prefix():
 # ---------------------------------------------------------------------------
 # Per-table persistence
 #
-# run_platform used to collect every TableRunResult from `asyncio.gather` and
-# only then write manifest/evidence - with an `if blocking: return` in front
-# that discarded the *successful* siblings too. Six tables, one failure, and
-# the five that worked were thrown away. Persisting each result the moment it
-# arrives is what makes "cancel one table" cost one table.
+# run_platform persists each TableRunResult the moment it arrives, so a failure
+# or a cancellation costs exactly the table it happened to. Collecting every
+# result first and writing afterwards would discard the successful siblings of a
+# failure: six tables, one failure, and four tables' work thrown away.
 # ---------------------------------------------------------------------------
 
 

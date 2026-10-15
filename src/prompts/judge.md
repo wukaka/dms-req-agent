@@ -64,7 +64,7 @@ orchestrator 落盘并置 `phase: "done"`。
 
 ### 8.2 一致性自检（五条）
 
-这是拦住旧架构那类判定错误的关卡，必须机器可查，不能只靠 LLM 自觉。实现见
+这是拦住「散文与判定不一致」这类错误的关卡，必须机器可查，不能只靠 LLM 自觉。实现见
 `checks/consistency.py`，`run_all()` 跑齐五条，任一条命中即拦住合稿。
 
 **① 否定语义与判定冲突**（`check_negation_conflict`）。扫描 notes 与 `tables/*.md`

@@ -2,8 +2,8 @@
 
 manifest.json is the single source of progress truth, so every write goes
 through a temp file + atomic replace, and unknown keys are always preserved:
-the phase-2..5 pipeline and the previous architecture both wrote fields we do
-not model here, and losing them would be silent data loss.
+the phase-2..5 pipeline writes fields this module does not model, and losing
+them would be silent data loss.
 """
 
 from __future__ import annotations
@@ -75,7 +75,7 @@ class Store:
         `deferred_questions` replaces rather than appends: it reflects this
         run's own understanding, and a re-launched table (after a crash, or a
         human editing the manifest) starts that understanding over rather than
-        piling old questions onto new ones.
+        accumulating questions across runs.
         """
         self.ensure_tables(manifest)
         for item in manifest["tables"]:

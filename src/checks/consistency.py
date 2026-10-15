@@ -1,9 +1,9 @@
 """The five consistency checks from the design doc, section 8.2.
 
-These exist because the previous architecture shipped two tables whose prose
-said the business object did not exist while the structured status said
-"done". Prose and verdict must agree, and that agreement has to be verifiable
-by code rather than by the model's own diligence.
+Prose and verdict must agree: a table's narrative can say the business object
+does not exist while its own record says the work is finished, and nothing in
+the document makes that contradiction visible to a reader. The agreement is
+therefore checked by code, not left to the model's own diligence.
 """
 
 from __future__ import annotations
@@ -73,8 +73,7 @@ GRANULARITY_REQUIRED, _FINER_THAN = _load_granularity_contracts()
 def claims_existence(entry: dict[str, Any]) -> bool:
     """Does this entry assert the table exists?
 
-    Falls back to the legacy `status == "done"` for manifests written by the
-    previous architecture, which had no `existence` field at all.
+    Keyed on `existence`; an entry carrying none is judged by its `status`.
     """
     raw = entry.get("existence")
     if raw:
@@ -126,8 +125,8 @@ def check_carrier_uniqueness(
 ) -> list[Finding]:
     """2. An existing table needs an identifiable, non-borrowed carrier.
 
-    A carrier is a page entry - nested `entry.route` / `entry.menu_path`, or
-    the legacy top-level `route` - or, for a table the platform only exposes
+    A carrier is a page entry - a top-level `route`, or nested `entry.route` /
+    `entry.menu_path` - or, for a table the platform only exposes
     through an interface, that table's own recorded APIs: emdlz's
     `dms_basic_info` is judged `partial` and is carried by
     `GET /mdlz-user/user/info` with no page at all, so demanding a route would
@@ -147,8 +146,7 @@ def check_carrier_uniqueness(
         listed += list(entry.get("apis", []))
         # Discovery nominates a table's carrier APIs into the nested entry, so
         # a table that is producing but not yet field-mapped (no evidence yet)
-        # still has its APIs on record - the same reason `entry.route` had to
-        # be read alongside the legacy top-level `route`.
+        # still has its APIs on record, just as a top-level `apis` list does.
         listed += list((entry.get("entry") or {}).get("probe_apis", []))
         apis_by_table[name] = {_normalise_api(a) for a in listed if a}
 
@@ -350,9 +348,9 @@ def _convention_findings(
     """Flag a row whose mapping column is not the kind of value it should hold.
 
     `mapped_to` names a standard field, `path` says where the value was read.
-    dms_basic_info's first emdlz pass wrote all 16 rows the other way round;
-    check 4 looks anchors up by `mapped_to`, so the whole table was skipped
-    without a word, and check 5 never saw two rows collide either.
+    Written the other way round, check 4 looks anchors up by `mapped_to` and
+    skips the whole table without a word, and check 5 never sees two rows
+    collide either.
     """
     findings: list[Finding] = []
     if target and target not in names:

@@ -1,11 +1,10 @@
 """Schema contracts that keep the consistency checks meaningful.
 
-`EvidenceField.path` is the source path a value was read from. The previous
-emdlz run wrote `/` there for every uncollected field, and check 5
-(`one_to_one`) then read twelve such rows as one path serving twelve standard
-fields. The model refuses the placeholder at generation time, and the
-contractually meaningful spelling of "not collected" is an empty path with
-`mapped_to` still naming the standard field.
+`EvidenceField.path` is the source path a value was read from. Filling it with
+`/` for every uncollected field makes check 5 (`one_to_one`) read those rows as
+one path serving many standard fields. So the model refuses the placeholder at
+generation time, and the contractually meaningful spelling of "not collected"
+is an empty path with `mapped_to` still naming the standard field.
 """
 
 from __future__ import annotations

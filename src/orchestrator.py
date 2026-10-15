@@ -78,7 +78,7 @@ _PRODUCING_VALUES = frozenset(e.value for e in PRODUCING)
 
 
 def discovery_already_done(manifest: dict[str, Any]) -> bool:
-    """True once a previous run's Discovery block has been persisted."""
+    """True once a Discovery block has been persisted."""
     return bool(manifest.get("discovery", {}).get("verified_at"))
 
 
@@ -130,9 +130,8 @@ def needs_screenshot_round(entry: dict[str, Any], evidence_index: dict[str, Any]
     whether that go-ahead has been given; `fields_confirmed` is what splits
     the two callers below.
 
-    Tables finished under the old single-pass flow carry
-    `screenshots_done: true` (backfilled by hand) and drop out here, which is
-    what "不追溯" means in practice.
+    A table already carrying `screenshots_done: true` drops out here - a
+    finished screenshot round is never re-run (不追溯).
     """
     if entry.get("existence") not in _PRODUCING_VALUES:
         return False
@@ -407,8 +406,8 @@ def persist_table_result(
     """Write one finished table's verdict + evidence straight to disk.
 
     Called per result rather than once over the whole batch: a later table
-    failing (or being cancelled) must not cost an earlier one its work, which
-    is exactly what the old collect-then-write-unless-any-failed path did.
+    failing (or being cancelled) must not cost an earlier one its work. That is
+    what makes "cancel one table" cost one table.
     """
     if result.verdict is None:
         return manifest

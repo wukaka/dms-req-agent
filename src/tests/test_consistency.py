@@ -1,15 +1,10 @@
 """Regression tests for the consistency checks.
 
-The old architecture emitted `status: "done"` for tables whose own notes said
-the business object did not exist. The `existence` field is the fix, so the
-checks now key on it and fall back to `status` only for legacy manifests.
-
-`fixtures/emdlz_manifest.json` is a real snapshot straddling both eras -
-`status` from the old run, `existence` from the new - so the two tables that
-used to be false positives now carry a correct `existence` and are rightly
-not flagged. The tests that asserted the old flagging behaviour were retired
-rather than re-pinned; `test_absent_table_is_never_flagged` states the
-contract that replaced them.
+`fixtures/emdlz_manifest.json` is a real emdlz snapshot: its `existence` values
+include `pending_human` and `granularity_mismatch`, and its prose carries
+site-scoped negations written against individual fields. The checks key on
+`existence` and judge a negation's scope rather than reading prose alone;
+`test_absent_table_is_never_flagged` states that contract.
 """
 
 from __future__ import annotations
@@ -189,8 +184,7 @@ def test_api_only_carrier_is_a_carrier():
 
 def test_nested_entry_route_counts_as_an_entry():
     """`entry.route` is where table agents record the page they actually used;
-    the old lookup only read the legacy top-level `route` or `entry.menu_path`,
-    so a table with a route but no menu name was flagged while being correct.
+    a table with a route but no menu name is still carried.
     """
     manifest = {
         "tables": [
@@ -263,8 +257,8 @@ def test_one_to_one_violations():
 
 def test_any_declared_path_of_a_multi_path_anchor_is_accepted():
     """The real emdlz anchor lists three interchangeable paths. Plain string
-    equality could never match one of them, so every table mapping
-    `distributor_code` was reported as inconsistent while being correct."""
+    equality could never match one of them, so a table mapping
+    `distributor_code` must be accepted when it matches any one of them."""
     manifest = {
         "tables": [],
         "discovery": {"anchors": {"distributor_code": {
@@ -364,9 +358,9 @@ def test_anchor_mismatch_is_caught():
 
 
 def test_swapped_path_and_mapped_to_are_caught():
-    """dms_basic_info's first emdlz pass wrote `path` = standard field name and
-    `mapped_to` = provenance prose. Check 4 looks anchors up by `mapped_to`, so
-    that table was skipped in complete silence rather than flagged."""
+    """A row that writes `path` = standard field name and `mapped_to` =
+    provenance prose must be caught: check 4 looks anchors up by `mapped_to`, so
+    such a table is otherwise skipped in complete silence."""
     contracts = {"dms_basic_info": frozenset({"distributor_code", "tenant_name"})}
     evidence = {
         "dms_basic_info": {

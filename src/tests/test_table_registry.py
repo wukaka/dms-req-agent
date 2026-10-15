@@ -1,11 +1,10 @@
 """`TableTaskRegistry` is what makes one table's death cost one table.
 
-The fan-out used to hand bare coroutines to `asyncio.gather()`, which has two
-consequences that showed up in production: there is no handle to cancel a
-single table by name, and the default `return_exceptions=False` re-raises the
-first failure into `run_platform` while leaving the *siblings running* -
-orphaned agents still driving the one shared browser after the coordinator
-has already unwound.
+Bare coroutines handed to `asyncio.gather()` give two problems: there is no
+handle to cancel a single table by name, and the default
+`return_exceptions=False` re-raises the first failure into `run_platform` while
+leaving the *siblings running* - orphaned agents still driving the one shared
+browser after the coordinator has already unwound.
 
 Naming the tasks and collecting every outcome fixes both. These tests use
 plain coroutines rather than real agents: the property under test is the
