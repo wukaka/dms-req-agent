@@ -1,0 +1,29 @@
+                 ┌───────────────┐
+                 │ AgentScope    │
+                 │ Discovery     │
+                 └───────┬───────┘
+                         │
+        ┌────────────────┼────────────────┐
+        ↓                ↓                ↓
+    Product          Inventory         Purchase
+     Agent             Agent             Agent
+        ↓                ↓                ↓
+     Sales            Customer         Supplier
+     Agent             Agent             Agent
+        └────────────────┼────────────────┘
+                         ↓
+                  Evidence / Judge
+                         ↓
+                  Requirement DSL
+                         ↓
+              ┌──────────────────┐
+              │ Your Harness     │
+              └────────┬─────────┘
+                       ↓
+                 Reverse Engineer
+                       ↓
+                   Collector
+                       ↓
+                     Parser
+                       ↓
+                   Validator

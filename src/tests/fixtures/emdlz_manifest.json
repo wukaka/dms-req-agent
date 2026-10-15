@@ -1,0 +1,290 @@
+{
+  "system": "emdlz",
+  "entry_url": "https://kunlun.emdlz.com.cn/login?redirect=%2Findex",
+  "test_account": "6182035（长沙市宏远商贸有限公司，enName: AC600K7318，角色 KL下单客户）",
+  "auth_method": "Header Token（主） + Cookie Session（冗余通道）",
+  "auth_fields": "请求头 token（JWT）；Cookie: Admin-Token（同一 JWT 值）+ JSESSIONID",
+  "data_mode": "JSON API / SPA（Vue + Element UI 若依风格前端，无 SSR 业务 HTML）",
+  "phase": "probing",
+  "tables": [
+    {
+      "table": "dms_basic_info",
+      "route": "",
+      "status": "done",
+      "apis": [
+        "POST /mdlz-order/otc-order-main/my/list（用于交叉核实经销商维度字段，非本表专属接口）"
+      ],
+      "files": [
+        "files/亿滋_基本信息_0_localStorage_user.json",
+        "files/亿滋_基本信息_1_order_customer_snapshot.json"
+      ],
+      "shots": [
+        "images/emdlz/亿滋_基本信息_0-annotated.jpg"
+      ],
+      "unsupported": [
+        "platform_brand(4)：站内无任何位置展示平台品牌名称（title/HTML全文/菜单/头像下拉均未命中）",
+        "contact_person(8)：无独立负责人字段，订单列表 operationUserName 语义不符且非一对一稳定字段",
+        "producer_name_original(10)",
+        "producer_dep_original(11)",
+        "producer_usc_code_original(12)",
+        "distributor_usc_code_original(14)",
+        "cooper_status(15)",
+        "tenan_name(16)"
+      ],
+      "table_level_unsupported": false,
+      "blockers": [],
+      "verified_at": "2026-09-17",
+      "notes": "提名 absent，不出终判——零命中拿不准，按 §5.3 纪律②交人工中断点①对照完整菜单树拍板。白名单命中项“个人中心/我的资料/企业信息/企业档案/账户信息/客户档案”逐一轻点：/user/profile 只有 用户昵称/手机号码/邮箱/性别 两个 tab（基本资料 + 修改密码），是纯个人账号资料，无经销商/企业维度档案载体；该页不发任何取数 XHR（仅 /mdlz-oa/worklist/queryUnreadCount 心跳）。全量 addRoutes 树中无其他候选；数据维护 tab 对当前账号仅暴露 DOS审批流。数据维护下 customerMasterData（财务客户主数据）、custdata/custlabel、custlabel/custdetail（客户(标签)管理）虽命中“客户档案/企业信息”，但实测均被导航守卫重定向回 /index（无权限），只能提名、不能取证，故一并交人工。接口侧探测 /mdlz-order/basicInfo/detail、/mdlz-order/dimCustomer/basicInfo、/mdlz-order/customer/basic/list 均 404 Not Found。",
+      "existence": "pending_human",
+      "entry": {
+        "menu_path": "个人中心（右上角用户菜单）",
+        "route": "/user/profile",
+        "probe_apis": [],
+        "columns": [
+          "用户昵称",
+          "手机号码",
+          "邮箱",
+          "性别"
+        ],
+        "row_count": null,
+        "needs_query_params": false,
+        "may_have_drilldown": false
+      }
+    },
+    {
+      "table": "dms_order_details_info",
+      "route": "/order/reserved",
+      "status": "done",
+      "apis": [
+        "POST /mdlz-order/otc-order-main/my/list（订单头列表，分页）",
+        "GET /mdlz-order/otc-order-main/detail?id=<orderId>（订单头+SKU行项目，本表主来源）"
+      ],
+      "files": [
+        "files/亿滋_订单明细_0_my_list.json",
+        "files/亿滋_订单明细_1_detail.json",
+        "files/亿滋_订单明细_2_detail_multi_sku.json"
+      ],
+      "shots": [
+        "images/emdlz/亿滋_订单明细_0-annotated.jpg",
+        "images/emdlz/亿滋_订单明细_1-annotated.jpg",
+        "images/emdlz/亿滋_订单明细_2-annotated.jpg",
+        "images/emdlz/亿滋_订单明细_3-annotated.jpg"
+      ],
+      "unsupported": [
+        "amount_unit(9)：列表/详情页全部金额列均无独立单位标注，接口无 currency/unit 字段",
+        "quantity_unit(11)：无独立单位字段，'箱'仅隐含在列名文案中",
+        "order_weight(15)/weight_unit(16)：两接口逐字段核对及页面列名核对均无重量相关字段",
+        "order_source(20)：接口原始字段 main.orderSource='DT' 存在但全站无中文字典映射，样本仅单一值",
+        "func_version(21)：全站无对应字段",
+        "order_type(22)：接口原始字段 main.orderType='ZOR' 存在但全站无中文字典映射，样本仅单一值"
+      ],
+      "table_level_unsupported": false,
+      "blockers": [],
+      "verified_at": "2026-09-17",
+      "notes": "唯一业务载体，粒度吻合（一行一订单）。POST /mdlz-order/otc-order-main/my/list 首屏即出数（body {\"pageSize\":10,\"pageNow\":1}，result.total=593，records 各 20+ 字段：orderNo/sapPo/payerToCode/payerToName/soldToCode/soldToName/poDate/madDate/rddDate/taxTotalAmount/skuNumber/orderCount/payType/orderType…），无需先选查询条件。行内展开下钻 GET /mdlz-order/otc-order-main/my/orderDnInfo?orderId=… 该单返回 []（暂无送货/分配数据，非无载体）；详情接口 GET /mdlz-order/otc-order-main/detail?id=… 返回 result.main + result.orderItems[]（行项目级），故 may_have_drilldown=true，交业务 agent 下钻核验。订单状态码表在页面 vm 中（1 客户可修改 … 11 已生成送货单 / 17 已清账 / 18 整单未满足 / 20 订单已处理）。同一候选家族另两个入口：/order/demandOrderActivity（特殊订单可订货，复用同一列表组件，含 重新编辑/再来一单）已轻点确认；/order/allOrder（全部订单）被导航守卫重定向回 /index 无法轻点，一并交业务 agent 作为补充入口。",
+      "existence": "exists",
+      "entry": {
+        "menu_path": "订单管理 > 我的订单",
+        "route": "/order/reserved",
+        "probe_apis": [
+          "POST /mdlz-order/otc-order-main/my/list",
+          "GET /mdlz-order/otc-order-main/my/orderDnInfo?orderId=<id>",
+          "GET /mdlz-order/otc-order-main/detail?id=<id>"
+        ],
+        "columns": [
+          "订单编号",
+          "订单状态",
+          "SAP订单号",
+          "客户",
+          "送达方",
+          "订货日期",
+          "订单处理日",
+          "要求到货日",
+          "订单数量",
+          "订单金额(含税)",
+          "付款方式"
+        ],
+        "row_count": 10,
+        "needs_query_params": false,
+        "may_have_drilldown": true
+      }
+    },
+    {
+      "table": "dms_bill_monthly_info",
+      "route": "/order/accountsReceivableStatement",
+      "status": "done",
+      "apis": [
+        "GET /mdlz-order/accountsReceivableStatement/queryFileNameMonth（半月期号枚举，供遍历历史区间）",
+        "POST /mdlz-order/accountsReceivableStatement/queryList（本表主来源，同时也是 dms_bill_details_info 的 detailList[] 来源，域名为 mdlz-order，非猜测的 mdlz-finance）"
+      ],
+      "files": [
+        "files/亿滋_账单_0_queryFileNameMonth.json",
+        "files/亿滋_账单_1_queryList_260801.json",
+        "files/亿滋_账单_2_queryList_260602.json"
+      ],
+      "shots": [
+        "images/emdlz/亿滋_账单_0_form.jpg",
+        "images/emdlz/亿滋_账单_1_dateselect.jpg",
+        "images/emdlz/亿滋_账单_2_result-annotated.jpg"
+      ],
+      "unsupported": [
+        "contact_person(6)/contact_phone(7)/producer_name_original(8)/producer_dep_original(9)：接口/页面均无对应字段",
+        "purchase_quantity(15)：仅金额字段，无数量/箱数字段",
+        "return_amount(16)/return_quantity(17)：抽样5个期号28条明细行均未见负billingAmount或退货标识",
+        "quantity_unit(18)/amount_unit(20)：全站无对应单位字段",
+        "abstract(21)：头部/明细均无摘要类文本字段",
+        "discount_amount(22)：候选字段creditSaleLoanTotal/receivableAdjustmentTotal抽样5期号均为0，无非零样本验证语义"
+      ],
+      "table_level_unsupported": false,
+      "blockers": [],
+      "verified_at": "2026-09-17",
+      "notes": "业务对象存在，但粒度与契约不符——独立一态，不并入 absent、不算 exists。站点只有半月期号：对账日期下拉为 fileNameMonth 列表（260901、260802、260801、260702…共 72 期，两位年+两位月+两位半期），实测 260802 → inventoryPeriodStart=2026/08/16、inventoryPeriodEnd=2026/08/31，260801 → 2026/08/01–2026/08/15，即每期半月。接口返回 result=[[…]] 嵌套数组，每期一条汇总记录（payerToCode/payerToName/openingBalance/endingBalance/billingTotalAmount/salesTotal/cashSaleLoanTotal/receivableAdjustmentTotal），pageSize=1（半月一期一条），字段 inventoryPeriodStart/End 即半月经期起止。契约要月度，站点按月拆两期；“按实际半月经期号采集还是判不适用”属业务决策，必须由人拍板。needs_query_params=true：轻点后页面为空表（无 el-table 表头、0 行），必须先选 客户 + 对账日期 才出数——空结果不等于无数据。",
+      "existence": "granularity_mismatch",
+      "entry": {
+        "menu_path": "订单管理 > 应收账款对账单",
+        "route": "/order/accountsReceivableStatement",
+        "probe_apis": [
+          "POST /mdlz-order/accountsReceivableStatement/queryList",
+          "GET /mdlz-order/billingStatement/dealer/queryFileNameYear"
+        ],
+        "columns": [
+          "客户编码",
+          "客户名称",
+          "清单期间",
+          "期初余额",
+          "期末余额",
+          "打印日期",
+          "fileNameMonth"
+        ],
+        "row_count": 1,
+        "needs_query_params": true,
+        "may_have_drilldown": true
+      }
+    },
+    {
+      "table": "dms_bill_details_info",
+      "route": "/order/accountsReceivableStatement",
+      "status": "done",
+      "apis": [
+        "POST /mdlz-order/accountsReceivableStatement/queryList（本表主来源，与 dms_bill_monthly_info 共用同一次请求，detailList[] 为明细行）"
+      ],
+      "files": [
+        "files/亿滋_账单_1_queryList_260801.json（与 dms_bill_monthly_info 共用）",
+        "files/亿滋_账单_2_queryList_260602.json（与 dms_bill_monthly_info 共用）",
+        "files/亿滋_商贸费用_0_queryFileNameYear.json（排除来源证据）",
+        "files/亿滋_商贸费用_1_daemonTask_query.json（排除来源证据）"
+      ],
+      "shots": [
+        "images/emdlz/亿滋_账单明细_0-annotated.jpg",
+        "images/emdlz/亿滋_商贸费用_3.jpg"
+      ],
+      "unsupported": [
+        "bill_type：detailList[] 无离散类型字段",
+        "invoice_amount：vatBillingNo为发票号非金额，无独立开票金额字段",
+        "goods_quantity(13)/quantity_unit(14)：无数量/单位字段",
+        "balance(15)：仅有半月对账单级别期初/期末余额（已用于dms_bill_monthly_info），无逐笔滚动余额",
+        "amount_unit(16)：全站无货币单位字段",
+        "abstract(17)：无摘要文本字段，派生分类标签方案已识别但未落地（待人工确认）",
+        "order_no(18)：deliveryNo编码体系与order_no不同，无关联证据",
+        "data_match(19)：候选字段settleAccount语义为清账状态非数据核对相符",
+        "platform_brand_id(20)：全站无该概念"
+      ],
+      "table_level_unsupported": false,
+      "blockers": [],
+      "verified_at": "2026-09-17",
+      "notes": "载体成立、粒度吻合（明细一行一笔凭证/一次往来）。同一 POST /mdlz-order/accountsReceivableStatement/queryList 响应的 result[0][0].detailList[] 即明细行，15 个字段：systemCredentialDate/systemCredentialNo/vatBillingNo/deliveryNo/billingAmount/sales/cashSaleLoan/creditSaleLoan/receivableAdjustment/settleAccount/tsNo，与 DOM 表头逐列对齐（客户=6182035 + 对账日期=260802 时 detailList 11 条 + 页面合计行 1 = 12 行；260801 时 detailList 8 条）。与 dms_bill_monthly_info 同源（见 same_source_hints），业务 agent 一次请求可同时处理两表，不必重复取证。同页另有“下载”导出入口。needs_query_params=true（同月度表，轻点空表，须先选 客户 + 对账日期）。",
+      "existence": "exists",
+      "entry": {
+        "menu_path": "订单管理 > 应收账款对账单",
+        "route": "/order/accountsReceivableStatement",
+        "probe_apis": [
+          "POST /mdlz-order/accountsReceivableStatement/queryList"
+        ],
+        "columns": [
+          "系统凭证日期",
+          "系统凭证号码",
+          "VAT发票号码",
+          "送货单号码",
+          "发票金额",
+          "销售额",
+          "现销贷款",
+          "赊销贷款",
+          "应收调整",
+          "清账",
+          "TS 号码"
+        ],
+        "row_count": 12,
+        "needs_query_params": true,
+        "may_have_drilldown": false
+      }
+    },
+    {
+      "table": "dms_contract_sign_info",
+      "route": "",
+      "status": "todo",
+      "apis": [],
+      "files": [],
+      "shots": [],
+      "unsupported": [],
+      "table_level_unsupported": false,
+      "blockers": [],
+      "verified_at": "",
+      "notes": "提名 absent，不出终判——零命中，按 §5.3 纪律②交人工中断点①对照完整菜单树拍板。白名单关键词 合同/协议/签约/签订/契约/经销协议 在全量菜单树中零命中：可见侧边栏仅 6 项（下达订单/我的订单/应收账款对账单/商贸费用报销单明细/需求订单/DOS审批流）；前端已注册的 addRoutes 全量树（订单管理 21 项、财务管理 8 项、信控管理 4 项、数据维护 22 项、配额管理 9 项、系统管理 4 项）无任何合同/协议/签约类入口，也无隐藏项。接口侧探测零命中：/mdlz-order/dimContract/list、/contract/list、/contractSign/list、/dimContract/queryList 均 404 Not Found。全量菜单树见 menu_map.md 以供人工复核。",
+      "existence": "pending_human",
+      "entry": {
+        "menu_path": "",
+        "route": "",
+        "probe_apis": [],
+        "columns": [],
+        "row_count": null,
+        "needs_query_params": false,
+        "may_have_drilldown": false
+      }
+    },
+    {
+      "table": "dms_certified_info",
+      "route": "",
+      "status": "todo",
+      "apis": [],
+      "files": [],
+      "shots": [],
+      "unsupported": [],
+      "table_level_unsupported": false,
+      "blockers": [],
+      "verified_at": "",
+      "notes": "提名 absent，不出终判——零命中，按 §5.3 纪律②交人工中断点①对照完整菜单树拍板。白名单关键词 认证/资质/授权/证书/资格/备案 零菜单命中；可见侧边栏与 addRoutes 全量树均无认证资质类入口。需排除一个假阳性：“授权”字样唯一来源是 GET /mdlz-order/dimCustomer/getAuthorizedPayer（返回 result.records[0]={payer:\"6182035\", payerToName:\"长沙市宏远商贸有限公司\"}），那是下达订单页的“授权付款方”下拉取数，不是资质/授权证书载体；下达订单页的 dimProduct/brand/list、dimProduct/category/list 同理只是品牌/品类字典。接口侧探测 /mdlz-order/certified/list、/dimCertificate/list、/dimQualification/list 均 404 Not Found。全量菜单树见 menu_map.md 以供人工复核。",
+      "existence": "pending_human",
+      "entry": {
+        "menu_path": "",
+        "route": "",
+        "probe_apis": [],
+        "columns": [],
+        "row_count": null,
+        "needs_query_params": false,
+        "may_have_drilldown": false
+      }
+    }
+  ],
+  "discovery": {
+    "menu_tree_ref": "menu_map.md",
+    "anchors": {
+      "distributor_code": {
+        "source": "跨接口稳定一致：POST /mdlz-order/otc-order-main/my/list 的 payerToCode 与 customerCode；POST /mdlz-order/accountsReceivableStatement/queryList 的 payerToCode；GET /mdlz-order/dimCustomer/getAuthorizedPayer 的 payer；localStorage.user.user.account / username",
+        "path": "result.records[].payerToCode（对账单侧：result[0][0].payerToCode）",
+        "sample": "6182035"
+      },
+      "distributor_name": {
+        "source": "跨接口稳定一致：otc-order-main/my/list 的 payerToName / soldToName；accountsReceivableStatement 的 payerToName；getAuthorizedPayer 的 payerToName；localStorage.user.user.zhName",
+        "path": "result.records[].payerToName（对账单侧：result[0][0].payerToName）",
+        "sample": "长沙市宏远商贸有限公司"
+      }
+    },
+    "same_source_hints": [
+      [
+        "dms_bill_monthly_info",
+        "dms_bill_details_info"
+      ]
+    ],
+    "verified_at": "2026-09-18"
+  }
+}
