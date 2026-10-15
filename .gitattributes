@@ -1,0 +1,2 @@
+# 全仓库统一 LF；仓库内 blob 一直是 LF，避免外部 Windows 工具写回 CRLF 产生假 diff
+* text=auto eol=lf
