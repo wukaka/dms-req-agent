@@ -11,7 +11,7 @@ from pathlib import Path
 
 from agentscope.message import Msg, TextBlock
 
-from dms_survey.agents.table_agent import (
+from src.agents.table_agent import (
     READ_FILE_CHAR_LIMIT,
     existing_artifacts,
     make_read_file_tool,
@@ -19,7 +19,7 @@ from dms_survey.agents.table_agent import (
     resume_digest,
     run_table_agent,
 )
-from dms_survey.models import Existence
+from src.models import Existence
 
 TABLE = "dms_order_details_info"
 
@@ -103,7 +103,7 @@ async def test_field_mapping_prompt_sends_screenshots_to_phase_three():
 
 
 def test_business_tools_exclude_screenshot_and_phase_three_keeps_it():
-    from dms_survey.agents.table_agent import SCREENSHOT_AGENT_TOOLS, TABLE_AGENT_TOOLS
+    from src.agents.table_agent import SCREENSHOT_AGENT_TOOLS, TABLE_AGENT_TOOLS
 
     assert "take_screenshot" not in TABLE_AGENT_TOOLS
     assert "take_screenshot" in SCREENSHOT_AGENT_TOOLS

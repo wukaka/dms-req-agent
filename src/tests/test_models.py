@@ -13,8 +13,8 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from dms_survey.checks import consistency
-from dms_survey.models import EvidenceField, EvidenceTable
+from src.checks import consistency
+from src.models import EvidenceField, EvidenceTable
 
 
 @pytest.mark.parametrize("placeholder", ["/", "-", "--", "N/A", "无", " none "])

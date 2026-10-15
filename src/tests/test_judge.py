@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import pytest
 from agentscope.message import Msg, TextBlock
 
-from dms_survey.agents.judge import compile_documents, make_ask_judge_tool
+from src.agents.judge import compile_documents, make_ask_judge_tool
 
 
 class FakeAgent:

@@ -7,8 +7,8 @@ from __future__ import annotations
 import pytest
 from agentscope.message import Msg, TextBlock
 
-from dms_survey.agents.discovery import run_discovery
-from dms_survey.models import Existence
+from src.agents.discovery import run_discovery
+from src.models import Existence
 
 
 class FakeAgent:

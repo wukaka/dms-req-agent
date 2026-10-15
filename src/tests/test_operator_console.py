@@ -18,10 +18,10 @@ import sys
 import textwrap
 from pathlib import Path
 
-from dms_survey.agents._control import AgentMailbox
-from dms_survey.agents._human import HumanChannel
-from dms_survey.operator_console import OperatorConsole
-from dms_survey.orchestrator import TableRunResult, TableTaskRegistry
+from src.agents._control import AgentMailbox
+from src.agents._human import HumanChannel
+from src.operator_console import OperatorConsole
+from src.orchestrator import TableRunResult, TableTaskRegistry
 
 
 async def _blocks_forever(table: str) -> TableRunResult:

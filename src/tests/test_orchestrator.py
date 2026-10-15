@@ -7,8 +7,8 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
-from dms_survey import orchestrator as orch
-from dms_survey.models import (
+from src import orchestrator as orch
+from src.models import (
     DiscoveryBlock,
     DiscoveryResult,
     EntryInfo,
@@ -18,7 +18,7 @@ from dms_survey.models import (
     TableTriage,
     TableVerdict,
 )
-from dms_survey.store import Store
+from src.store import Store
 
 
 def test_discovery_already_done_false_when_missing():

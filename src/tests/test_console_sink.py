@@ -15,7 +15,7 @@ from io import StringIO
 from pydantic import BaseModel
 from rich.console import Console
 
-from dms_survey.agents._events import ConsoleSink, tee
+from src.agents._events import ConsoleSink, tee
 
 
 class FakeEvent(BaseModel):

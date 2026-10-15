@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from agentscope.permission import PermissionMode
 
-from dms_survey.agents import bypass_permission_state
+from src.agents import bypass_permission_state
 
 
 def test_bypass_permission_state_uses_bypass_mode():

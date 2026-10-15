@@ -19,8 +19,8 @@ from pathlib import Path
 
 import pytest
 
-from dms_survey.checks import consistency
-from dms_survey.models import Existence
+from src.checks import consistency
+from src.models import Existence
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 EMDLZ = FIXTURES  # consistency checks that accept platform_dir use this

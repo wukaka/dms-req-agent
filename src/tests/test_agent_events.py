@@ -19,7 +19,7 @@ import pytest
 from agentscope.message import Msg, TextBlock
 from pydantic import BaseModel
 
-from dms_survey.agents._events import JsonlEventLog, structured
+from src.agents._events import JsonlEventLog, structured
 
 
 class Result(BaseModel):

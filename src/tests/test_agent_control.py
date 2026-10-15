@@ -18,13 +18,13 @@ import asyncio
 
 from agentscope.state import AgentState
 
-from dms_survey.agents._control import (
+from src.agents._control import (
     AgentMailbox,
     MailboxMiddleware,
     make_send_message_tool,
     make_terminate_agent_tool,
 )
-from dms_survey.orchestrator import TableRunResult, TableTaskRegistry
+from src.orchestrator import TableRunResult, TableTaskRegistry
 
 
 async def _blocks_forever(table: str) -> TableRunResult:

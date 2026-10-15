@@ -11,7 +11,7 @@ from __future__ import annotations
 import mcp.types
 from agentscope.tool import MCPTool
 
-from dms_survey.mcp_client import ANNOTATOR_NAME, JSREVERSER_NAME, qualify
+from src.mcp_client import ANNOTATOR_NAME, JSREVERSER_NAME, qualify
 
 
 def test_qualify_prefixes_with_mcp_double_underscore():

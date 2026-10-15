@@ -20,7 +20,7 @@ import asyncio
 
 import pytest
 
-from dms_survey.agents._human import HumanChannel, make_ask_human_tool
+from src.agents._human import HumanChannel, make_ask_human_tool
 
 
 async def test_ask_returns_the_answer_a_human_hands_back():

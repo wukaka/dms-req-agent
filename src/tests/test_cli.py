@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from dms_survey import __main__ as cli
-from dms_survey.store import Store
+from src import __main__ as cli
+from src.store import Store
 
 
 def test_parse_args_defaults_dir_from_platform():

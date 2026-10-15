@@ -5,7 +5,7 @@ from agentscope.credential import OpenAICredential
 from agentscope.message import DataBlock, Msg, TextBlock, ToolCallBlock, ToolResultBlock, URLSource
 from agentscope.tool import ToolChoice
 
-from dms_survey._llm_compat import (
+from src._llm_compat import (
     ToolChoiceRelaxingModel,
     ToolReplyAdjacencyFormatter,
     regroup_tool_replies,

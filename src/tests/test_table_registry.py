@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import asyncio
 
-from dms_survey.orchestrator import TableRunResult, TableTaskRegistry
+from src.orchestrator import TableRunResult, TableTaskRegistry
 
 
 async def _finishes(table: str, sibling_ran: list[str]) -> TableRunResult:
